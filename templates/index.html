@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-image: url("{{ url_for('static', filename='farm.jpg') }}"); /* Use Flask's url_for function */
+            background-image: url('{{ url_for("static", filename="farm.jpg") }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -20,7 +20,7 @@
         .container {
             max-width: 900px;
             margin: 2rem auto;
-            background: rgba(255, 255, 255, 0.9); /* Add transparency to make the background visible */
+            background: rgba(255, 255, 255, 0.9);
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -92,7 +92,35 @@
             <h2>Crop Prediction Model</h2>
             <p>Predict the ideal crop for your soil based on essential parameters.</p>
             <form action="/predict-crop" method="POST">
-                <!-- Form content here -->
+                <div class="form-group">
+                    <label for="Nitrogen">Nitrogen (0-140):</label>
+                    <input type="number" class="form-control" id="Nitrogen" name="Nitrogen" required step="0.001" min="0" max="140" placeholder="Enter nitrogen value">
+                </div>
+                <div class="form-group">
+                    <label for="Phosphorus">Phosphorus (5-145):</label>
+                    <input type="number" class="form-control" id="Phosphorus" name="Phosphorus" required step="0.001" min="5" max="145" placeholder="Enter phosphorus value">
+                </div>
+                <div class="form-group">
+                    <label for="Potassium">Potassium (5-205):</label>
+                    <input type="number" class="form-control" id="Potassium" name="Potassium" required step="0.001" min="5" max="205" placeholder="Enter potassium value">
+                </div>
+                <div class="form-group">
+                    <label for="temperature">Temperature (8.83-43.68):</label>
+                    <input type="number" class="form-control" id="temperature" name="temperature" required step="0.001" min="8.83" max="43.68" placeholder="Enter temperature in °C">
+                </div>
+                <div class="form-group">
+                    <label for="humidity">Humidity (14.26-99.98):</label>
+                    <input type="number" class="form-control" id="humidity" name="humidity" required step="0.001" min="14.26" max="99.98" placeholder="Enter humidity percentage">
+                </div>
+                <div class="form-group">
+                    <label for="pH">pH (3.50-9.94):</label>
+                    <input type="number" class="form-control" id="pH" name="pH" required step="0.01" min="3.50" max="9.94" placeholder="Enter pH value">
+                </div>
+                <div class="form-group">
+                    <label for="rainfall">Rainfall (20.21-298.56):</label>
+                    <input type="number" class="form-control" id="rainfall" name="rainfall" required step="0.001" min="20.21" max="298.56" placeholder="Enter rainfall in mm">
+                </div>
+                <button type="submit" class="btn">Predict Crop</button>
             </form>
         </section>
 
@@ -101,7 +129,31 @@
             <h2>Production Prediction Model</h2>
             <p>Predict production based on rainfall, temperature, and other parameters.</p>
             <form action="/predict-production" method="POST">
-                <!-- Form content here -->
+                <div class="form-group">
+                    <label for="Year">Year:</label>
+                    <input type="number" class="form-control" id="Year" name="Year" required placeholder="Enter year">
+                </div>
+                <div class="form-group">
+                    <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
+                    <input type="number" class="form-control" id="average_rain_fall_mm_per_year" name="average_rain_fall_mm_per_year" required step="0.01" placeholder="Enter average rainfall">
+                </div>
+                <div class="form-group">
+                    <label for="pesticides_tonnes">Pesticides (tonnes):</label>
+                    <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required step="0.01" placeholder="Enter pesticides usage">
+                </div>
+                <div class="form-group">
+                    <label for="avg_temp">Avg Temperature (°C):</label>
+                    <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01" placeholder="Enter average temperature">
+                </div>
+                <div class="form-group">
+                    <label for="Area">Area (e.g., Punjab, Haryana):</label>
+                    <input type="text" class="form-control" id="Area" name="Area" required placeholder="Enter area name">
+                </div>
+                <div class="form-group">
+                    <label for="Item">Item (e.g., Wheat, Rice):</label>
+                    <input type="text" class="form-control" id="Item" name="Item" required placeholder="Enter item name">
+                </div>
+                <button type="submit" class="btn">Predict Production</button>
             </form>
         </section>
 
