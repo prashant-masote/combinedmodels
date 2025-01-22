@@ -2,11 +2,9 @@ import warnings
 # Refine warning filter to suppress InconsistentVersionWarning from scikit-learn
 warnings.filterwarnings('ignore', category=UserWarning, message='.*InconsistentVersionWarning.*')
 
-# Now import the rest of your libraries
 from flask import Flask, request, render_template
 import numpy as np
 import pickle
-import sklearn
 
 # Load the models and preprocessors
 crop_model = pickle.load(open("model.pkl", "rb"))  # Replace with your crop model file
