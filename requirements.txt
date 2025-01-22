@@ -1,7 +1,10 @@
 
 Flask
 scikit-learn
-scikit-learn==1.5.2
+joblib
+numpy
+scipy 
+threadpoolctl
 pandas
 numpy
 gunicorn
