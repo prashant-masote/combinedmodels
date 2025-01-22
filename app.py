@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, message='.*InconsistentVersionWarning.*')
+
 from flask import Flask, request, render_template
 import numpy as np
 import pickle
