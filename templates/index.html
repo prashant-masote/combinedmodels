@@ -1,166 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
+import warnings
+# Refine warning filter to suppress InconsistentVersionWarning from scikit-learn
+warnings.filterwarnings('ignore', category=UserWarning, message='.*InconsistentVersionWarning.*')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Prediction Models</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+from flask import Flask, request, render_template
+import numpy as np
+import pickle
 
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+# Load the models and preprocessors
+crop_model = pickle.load(open("model.pkl", "rb"))  # Replace with your crop model file
+production_model = pickle.load(open("dtr.pkl", "rb"))  # Replace with your production model file
+production_preprocessor = pickle.load(open("preprocessor.pkl", "rb"))  # Replace with your preprocessor file
 
-        h1, h2, h3 {
-            text-align: center;
-            color: #4CAF50;
-        }
+# Initialize Flask app
+app = Flask(__name__)
 
-        p {
-            text-align: center;
-            color: #6c757d;
-        }
+# Define valid ranges for crop prediction inputs
+VALID_RANGES = {
+    "Nitrogen": (0, 140),
+    "Phosphorus": (5, 145),
+    "Potassium": (5, 205),
+    "temperature": (8.83, 43.68),
+    "humidity": (14.26, 99.98),
+    "pH": (3.50, 9.94),
+    "rainfall": (20.21, 298.56),
+}
 
-        form {
-            margin-bottom: 2rem;
-        }
+def validate_input(input_data, valid_ranges):
+    """
+    Validate input values against predefined ranges.
+    """
+    for key, value in zip(valid_ranges.keys(), input_data):
+        min_val, max_val = valid_ranges[key]
+        if not (min_val <= value <= max_val):
+            return f"{key} value {value} is out of range ({min_val}-{max_val})."
+    return None
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-        .btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-        }
+@app.route("/predict-crop", methods=["POST"])
+def predict_crop():
+    try:
+        # Collect input data
+        float_features = [float(x) for x in request.form.values()]
+        input_data = np.array(float_features)
 
-        .btn:hover {
-            background-color: #45a049;
-        }
+        # Validate input data
+        validation_error = validate_input(float_features, VALID_RANGES)
+        if validation_error:
+            return render_template("index.html", prediction_text=f"Error: {validation_error}")
 
-        #prediction-result {
-            text-align: center;
-            font-weight: bold;
-            color: #4CAF50;
-            margin-top: 1.5rem;
-        }
+        # Make prediction
+        prediction = crop_model.predict([input_data])
+        predicted_crop = prediction[0] if isinstance(prediction, (list, np.ndarray)) else prediction
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
+        return render_template("index.html", prediction_text=f"The Predicted Crop is: {predicted_crop}")
+    except ValueError:
+        return render_template("index.html", prediction_text="Error: Invalid input. Please enter valid numeric values.")
+    except Exception as e:
+        return render_template("index.html", prediction_text=f"An unexpected error occurred: {str(e)}")
 
-            h1 {
-                font-size: 1.8rem;
-            }
+@app.route("/predict-production", methods=["POST"])
+def predict_production():
+    try:
+        # Collect input data
+        features = [
+            request.form["Year"],
+            request.form["average_rain_fall_mm_per_year"],
+            request.form["pesticides_tonnes"],
+            request.form["avg_temp"],
+            request.form["Area"],
+            request.form["Item"],
+        ]
+        features_array = np.array([features], dtype=object)
 
-            .btn {
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
+        # Transform features using the preprocessor
+        transformed_features = production_preprocessor.transform(features_array)
 
-<body>
-    <div class="container">
-        <h1>ML Prediction Models</h1>
-        <h3>Empowering Decision-Making with Smart Predictions</h3>
+        # Make prediction
+        prediction = production_model.predict(transformed_features)
+        predicted_value = prediction[0] if isinstance(prediction, (list, np.ndarray)) else prediction
 
-        <!-- Crop Prediction Model Form -->
-        <section>
-            <h2>Crop Prediction Model</h2>
-            <p>Predict the ideal crop for your soil based on essential parameters.</p>
-            <form action="/predict-crop" method="POST">
-                <div class="form-group">
-                    <label for="Nitrogen">Nitrogen (0-140):</label>
-                    <input type="number" class="form-control" id="Nitrogen" name="Nitrogen" required step="0.001" min="0" max="140">
-                </div>
-                <div class="form-group">
-                    <label for="Phosphorus">Phosphorus (5-145):</label>
-                    <input type="number" class="form-control" id="Phosphorus" name="Phosphorus" required step="0.001" min="5" max="145">
-                </div>
-                <div class="form-group">
-                    <label for="Potassium">Potassium (5-205):</label>
-                    <input type="number" class="form-control" id="Potassium" name="Potassium" required step="0.001" min="5" max="205">
-                </div>
-                <div class="form-group">
-                    <label for="temperature">Temperature (8.83-43.68):</label>
-                    <input type="number" class="form-control" id="temperature" name="temperature" required step="0.001" min="8.83" max="43.68">
-                </div>
-                <div class="form-group">
-                    <label for="humidity">Humidity (14.26-99.98):</label>
-                    <input type="number" class="form-control" id="humidity" name="humidity" required step="0.001" min="14.26" max="99.98">
-                </div>
-                <div class="form-group">
-                    <label for="pH">pH (3.50-9.94):</label>
-                    <input type="number" class="form-control" id="pH" name="pH" required step="0.01" min="3.50" max="9.94">
-                </div>
-                <div class="form-group">
-                    <label for="rainfall">Rainfall (20.21-298.56):</label>
-                    <input type="number" class="form-control" id="rainfall" name="rainfall" required step="0.001" min="20.21" max="298.56">
-                </div>
-                <button type="submit" class="btn">Predict Crop</button>
-            </form>
-        </section>
+        return render_template("index.html", prediction_text=f"The Predicted Production is: {predicted_value}")
+    except ValueError:
+        return render_template("index.html", prediction_text="Error: Invalid input. Please enter valid values.")
+    except Exception as e:
+        return render_template("index.html", prediction_text=f"An unexpected error occurred: {str(e)}")
 
-        <!-- Production Prediction Model Form -->
-        <section>
-            <h2>Production Prediction Model</h2>
-            <p>Predict production based on rainfall, temperature, and other parameters.</p>
-            <form action="/predict-production" method="POST">
-                <div class="form-group">
-                    <label for="Year">Year:</label>
-                    <input type="number" class="form-control" id="Year" name="Year" required>
-                </div>
-                <div class="form-group">
-                    <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
-                    <input type="number" class="form-control" id="average_rain_fall_mm_per_year" name="average_rain_fall_mm_per_year" required step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="pesticides_tonnes">Pesticides (tonnes):</label>
-                    <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="avg_temp">Avg Temperature (°C):</label>
-                    <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="Area">Area:</label>
-                    <input type="text" class="form-control" id="Area" name="Area" required>
-                </div>
-                <div class="form-group">
-                    <label for="Item">Item:</label>
-                    <input type="text" class="form-control" id="Item" name="Item" required>
-                </div>
-                <button type="submit" class="btn">Predict Production</button>
-            </form>
-        </section>
-
-        <!-- Prediction Result -->
-        <div id="prediction-result">
-            {% if prediction_text %}
-            <p>{{ prediction_text }}</p>
-            {% endif %}
-        </div>
-    </div>
-</body>
-
-</html>
+if __name__ == "__main__":
+    app.run(debug=True)
