@@ -1,6 +1,8 @@
 import warnings
+# Refine warning filter to suppress InconsistentVersionWarning from scikit-learn
 warnings.filterwarnings('ignore', category=UserWarning, message='.*InconsistentVersionWarning.*')
 
+# Now import the rest of your libraries
 from flask import Flask, request, render_template
 import numpy as np
 import pickle
