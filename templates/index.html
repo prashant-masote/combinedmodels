@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Prediction Models</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        p {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        #prediction-result {
+            text-align: center;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>ML Prediction Models</h1>
+        <h3>Empowering Decision-Making with Smart Predictions</h3>
+
+        <!-- Crop Prediction Model Form -->
+        <section>
+            <h2>Crop Prediction Model</h2>
+            <p>Predict the ideal crop for your soil based on essential parameters.</p>
+            <form action="/predict-crop" method="POST">
+                <div class="form-group">
+                    <label for="Nitrogen">Nitrogen (0-140):</label>
+                    <input type="number" class="form-control" id="Nitrogen" name="Nitrogen" required step="0.001" min="0" max="140">
+                </div>
+                <div class="form-group">
+                    <label for="Phosphorus">Phosphorus (5-145):</label>
+                    <input type="number" class="form-control" id="Phosphorus" name="Phosphorus" required step="0.001" min="5" max="145">
+                </div>
+                <div class="form-group">
+                    <label for="Potassium">Potassium (5-205):</label>
+                    <input type="number" class="form-control" id="Potassium" name="Potassium" required step="0.001" min="5" max="205">
+                </div>
+                <div class="form-group">
+                    <label for="temperature">Temperature (8.83-43.68):</label>
+                    <input type="number" class="form-control" id="temperature" name="temperature" required step="0.001" min="8.83" max="43.68">
+                </div>
+                <div class="form-group">
+                    <label for="humidity">Humidity (14.26-99.98):</label>
+                    <input type="number" class="form-control" id="humidity" name="humidity" required step="0.001" min="14.26" max="99.98">
+                </div>
+                <div class="form-group">
+                    <label for="pH">pH (3.50-9.94):</label>
+                    <input type="number" class="form-control" id="pH" name="pH" required step="0.01" min="3.50" max="9.94">
+                </div>
+                <div class="form-group">
+                    <label for="rainfall">Rainfall (20.21-298.56):</label>
+                    <input type="number" class="form-control" id="rainfall" name="rainfall" required step="0.001" min="20.21" max="298.56">
+                </div>
+                <button type="submit" class="btn">Predict Crop</button>
+            </form>
+        </section>
+
+        <!-- Production Prediction Model Form -->
+        <section>
+            <h2>Production Prediction Model</h2>
+            <p>Predict production based on rainfall, temperature, and other parameters.</p>
+            <form action="/predict-production" method="POST">
+                <div class="form-group">
+                    <label for="Year">Year:</label>
+                    <input type="number" class="form-control" id="Year" name="Year" required>
+                </div>
+                <div class="form-group">
+                    <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
+                    <input type="number" class="form-control" id="average_rain_fall_mm_per_year" name="average_rain_fall_mm_per_year" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="pesticides_tonnes">Pesticides (tonnes):</label>
+                    <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="avg_temp">Avg Temperature (°C):</label>
+                    <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="Area">Area:</label>
+                    <input type="text" class="form-control" id="Area" name="Area" required>
+                </div>
+                <div class="form-group">
+                    <label for="Item">Item:</label>
+                    <input type="text" class="form-control" id="Item" name="Item" required>
+                </div>
+                <button type="submit" class="btn">Predict Production</button>
+            </form>
+        </section>
+
+        <!-- Prediction Result -->
+        <div id="prediction-result">
+            {% if prediction_text %}
+            <p>{{ prediction_text }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
