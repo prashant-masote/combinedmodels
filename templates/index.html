@@ -125,38 +125,40 @@
         </section>
 
         <!-- Production Prediction Model Form -->
-      <section>
+  <section>
     <h2>Production Prediction Model</h2>
     <p>Predict production based on rainfall, temperature, and other parameters.</p>
     <form action="/predict-production" method="POST">
         <div class="form-group">
-            <label for="Year">Year:</label>
-            <input type="number" class="form-control" id="Year" name="Year" required placeholder="Enter year" 
-                   min="2020" max="2026">
+            <label for="Year">Year (1990 - 2013):</label>
+            <input type="number" class="form-control" id="Year" name="Year" required 
+                   placeholder="e.g., 2005" min="2020" max="2026" value="2025">
         </div>
         <div class="form-group">
-            <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
+            <label for="average_rain_fall_mm_per_year">Avg Rainfall (89 - 2700 mm/year):</label>
             <input type="number" class="form-control" id="average_rain_fall_mm_per_year" 
-                   name="average_rain_fall_mm_per_year" required step="0.01" placeholder="Enter average rainfall" 
-                   min="89" max="1485">
+                   name="average_rain_fall_mm_per_year" required step="0.01" 
+                   placeholder="e.g., 1200" min="89" max="2700" value="1200">
         </div>
         <div class="form-group">
-            <label for="pesticides_tonnes">Pesticides (tonnes):</label>
+            <label for="pesticides_tonnes">Pesticides (23 - 17379.76 tonnes):</label>
             <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required 
-                   step="0.01" placeholder="Enter pesticides usage" min="23" max="25000">
+                   step="0.01" placeholder="e.g., 500" min="23" max="17379.76" value="500">
         </div>
         <div class="form-group">
-            <label for="avg_temp">Avg Temperature (°C):</label>
+            <label for="avg_temp">Avg Temperature (8.83 - 43.68 °C):</label>
             <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01" 
-                   placeholder="Enter average temperature" min="15.36" max="30.00">
+                   placeholder="e.g., 18.5" min="8.83" max="43.68" value="18.5">
         </div>
         <div class="form-group">
             <label for="Area">Area (e.g., India, Algeria):</label>
-            <input type="text" class="form-control" id="Area" name="Area" required placeholder="Enter area name">
+            <input type="text" class="form-control" id="Area" name="Area" required 
+                   placeholder="e.g., India" value="India">
         </div>
         <div class="form-group">
-            <label for="Item">Item (e.g., Maize, (Rice,paddy), Potato):</label>
-            <input type="text" class="form-control" id="Item" name="Item" required placeholder="Enter item name">
+            <label for="Item">Item (e.g., Maize, Rice, Wheat):</label>
+            <input type="text" class="form-control" id="Item" name="Item" required 
+                   placeholder="e.g.,(Rice, paddy), Potato, Maize" value="Maize">
         </div>
         <button type="submit" class="btn">Predict Production</button>
     </form>
