@@ -125,37 +125,43 @@
         </section>
 
         <!-- Production Prediction Model Form -->
-        <section>
-            <h2>Production Prediction Model</h2>
-            <p>Predict production based on rainfall, temperature, and other parameters.</p>
-            <form action="/predict-production" method="POST">
-                <div class="form-group">
-                    <label for="Year">Year:</label>
-                    <input type="number" class="form-control" id="Year" name="Year" required placeholder="Enter year">
-                </div>
-                <div class="form-group">
-                    <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
-                    <input type="number" class="form-control" id="average_rain_fall_mm_per_year" name="average_rain_fall_mm_per_year" required step="0.01" placeholder="Enter average rainfall">
-                </div>
-                <div class="form-group">
-                    <label for="pesticides_tonnes">Pesticides (tonnes):</label>
-                    <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required step="0.01" placeholder="Enter pesticides usage">
-                </div>
-                <div class="form-group">
-                    <label for="avg_temp">Avg Temperature (°C):</label>
-                    <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01" placeholder="Enter average temperature">
-                </div>
-                <div class="form-group">
-                    <label for="Area">Area (e.g., India, Algeria):</label>
-                    <input type="text" class="form-control" id="Area" name="Area" required placeholder="Enter area name">
-                </div>
-                <div class="form-group">
-                    <label for="Item">Item (e.g., Maize, (Rice, paddy):</label>
-                    <input type="text" class="form-control" id="Item" name="Item" required placeholder="Enter item name">
-                </div>
-                <button type="submit" class="btn">Predict Production</button>
-            </form>
-        </section>
+      <section>
+    <h2>Production Prediction Model</h2>
+    <p>Predict production based on rainfall, temperature, and other parameters.</p>
+    <form action="/predict-production" method="POST">
+        <div class="form-group">
+            <label for="Year">Year:</label>
+            <input type="number" class="form-control" id="Year" name="Year" required placeholder="Enter year" 
+                   min="2020" max="2026">
+        </div>
+        <div class="form-group">
+            <label for="average_rain_fall_mm_per_year">Avg Rainfall (mm/year):</label>
+            <input type="number" class="form-control" id="average_rain_fall_mm_per_year" 
+                   name="average_rain_fall_mm_per_year" required step="0.01" placeholder="Enter average rainfall" 
+                   min="89" max="1485">
+        </div>
+        <div class="form-group">
+            <label for="pesticides_tonnes">Pesticides (tonnes):</label>
+            <input type="number" class="form-control" id="pesticides_tonnes" name="pesticides_tonnes" required 
+                   step="0.01" placeholder="Enter pesticides usage" min="23" max="25000">
+        </div>
+        <div class="form-group">
+            <label for="avg_temp">Avg Temperature (°C):</label>
+            <input type="number" class="form-control" id="avg_temp" name="avg_temp" required step="0.01" 
+                   placeholder="Enter average temperature" min="15.36" max="30.00">
+        </div>
+        <div class="form-group">
+            <label for="Area">Area (e.g., India, Algeria):</label>
+            <input type="text" class="form-control" id="Area" name="Area" required placeholder="Enter area name">
+        </div>
+        <div class="form-group">
+            <label for="Item">Item (e.g., Maize, (Rice,paddy), Potato):</label>
+            <input type="text" class="form-control" id="Item" name="Item" required placeholder="Enter item name">
+        </div>
+        <button type="submit" class="btn">Predict Production</button>
+    </form>
+</section>
+
 
         <!-- Prediction Result -->
         <div id="prediction-result">
